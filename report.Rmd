@@ -16,7 +16,7 @@ pacman::p_load(knitr)
 
 ## Data
 
-Using RStudio, we could easily open a dataset and take a look at it.
+Using RStudio, we can easily open a dataset and take a look at it.
 
 ```{r}
 data("iris")
