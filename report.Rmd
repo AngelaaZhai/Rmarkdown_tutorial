@@ -1,8 +1,11 @@
 ---
-title: "Report"
+title: "Demo"
 author: "Angela Zhai"
 date: "9/16/2019"
-output: html_document
+output: 
+  html_document:
+    toc: True
+    toc_float: True
 ---
 
 ```{r setup, include=FALSE}
@@ -11,7 +14,7 @@ pacman::p_load(knitr)
 # library(knitr)
 ```
 
-## RStudio vs R itself
+## Data
 
 Using RStudio, we could easily open a dataset and take a look at it.
 
@@ -19,7 +22,7 @@ Using RStudio, we could easily open a dataset and take a look at it.
 data("iris")
 ```
 
-Then what should we do without RStudio?
+And what else can we do?
 
 ```{r}
 summary(iris)
