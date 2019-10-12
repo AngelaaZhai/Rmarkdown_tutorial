@@ -1,0 +1,25 @@
+---
+title: "Report"
+author: "Angela Zhai"
+date: "10/11/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+pacman::p_load(knitr)
+```
+
+## I. Introduction
+
+Edgar Anderson measured and collected sepal length and width and petal length and width from three species of iris. Those measurements are given in centimeters, and there are 50 observations for each of the species. The species are Iris setosa, versicolor, and virginica. We are interested to figure out if there is a significant difference among different species.
+
+
+## II. Data
+
+### Overview
+
+```{r echo=FALSE}
+kable(iris[1:10, ])
+```
+
