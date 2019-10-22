@@ -7,19 +7,75 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-pacman::p_load(knitr)
+pacman::p_load(knitr, tidyverse)
 ```
 
 ## I. Introduction
 
-Edgar Anderson measured and collected sepal length and width and petal length and width from three species of iris. Those measurements are given in centimeters, and there are 50 observations for each of the species. The species are Iris setosa, versicolor, and virginica. We are interested to figure out if there is a significant difference among different species.
+The vehicle level crash data comes from Massachusetts government website (https://www.mass.gov/). When car crashes are reported to the Registry of Motor Vehicles, the MassDOT Highway Division uses the crash information for data-driven safety analyses and traffic engineering studies. We are interested to figure out if any factors related to the crashes.
+
 
 
 ## II. Data
 
+```{r echo=FALSE}
+## Import Crash Data
+Crash <- read_csv("2017_Vehicle_Level_Crash_Details_.csv",
+                  col_types = cols(EXIT_NUMB = col_character(), EXIT_RTE = col_character(), MM_RTE = col_character()))
+```
+
+
 ### Overview
 
 ```{r echo=FALSE}
-kable(iris[1:10, ])
+kable(Crash[1:5, ])
 ```
+
+### Exploratory Data Analysis
+
+```{r echo=FALSE}
+# colnames(Crash)
+## There are 138 columns in the crash data
+```
+
+```{r echo=FALSE}
+## Only keep interested fileds, and order by IDs
+Crash_clean <- Crash %>%
+  select(OBJECTID, CRASH_NUMB, RMV_DOC_IDS, CRASH_RPT_IDS, YEAR, CRASH_DATE, CRASH_HOUR, CITY_TOWN_NAME,
+         CRASH_SEVERITY_DESCR, NUMB_VEHC, AMBNT_LIGHT_DESCR, WEATH_COND_DESCR, ROAD_SURF_COND_DESCR,
+         RDWY_JNCT_TYPE_DESCR, TRAF_CNTRL_DEVC_TYPE_DESCR, SPEED_LIMIT, URBAN_TYPE, URBAN_LOC_TYPE, DRIVER_AGE,
+         MOST_HRMF_EVENT) %>%
+  arrange(CRASH_NUMB, RMV_DOC_IDS)
+## Seems like if the crash happened by multiple vehicles, we have separated record for each of them.
+```
+
+```{r echo=FALSE}
+## Only keep single record for single crash
+Crash_event <- Crash_clean %>%
+  select(-OBJECTID, -DRIVER_AGE) %>%
+  distinct()
+```
+
+Question: Was it light or dark when crash happened?
+
+```{r echo=FALSE}
+Crash_event %>%
+  group_by(AMBNT_LIGHT_DESCR) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+```
+
+Question: What's the most severe crash (most vehicles got involved) under each weather condition? Show top 10 here.
+
+```{r echo=FALSE}
+Crash_event %>%
+  group_by(WEATH_COND_DESCR) %>%
+  summarise(max_num_vehicle = max(NUMB_VEHC)) %>%
+  arrange(desc(max_num_vehicle)) %>%
+  head(10)
+```
+
+
+
+
 
