@@ -52,9 +52,10 @@ Crash_clean <- Crash %>%
 ```{r echo=FALSE}
 ## Only keep single record for single crash
 Crash_event <- Crash_clean %>%
-  select(-OBJECTID, -DRIVER_AGE) %>%
+  select(-OBJECTID, -DRIVER_AGE, -MOST_HRMF_EVENT) %>%
   distinct()
 ```
+
 
 Question: Was it light or dark when crash happened?
 
@@ -76,6 +77,33 @@ Crash_event %>%
 ```
 
 
+Visualization: Total Number of crashes happened by hour
 
+```{r echo=FALSE}
+Crash_hourly <- Crash_event %>%
+  group_by(CRASH_HOUR) %>%
+  summarise(count = n()) %>%
+  filter(CRASH_HOUR != '')
+```
+
+```{r echo=FALSE}
+Crash_hourly$CRASH_HOUR <- factor(Crash_hourly$CRASH_HOUR,
+                                  levels = c("12:00AM to 12:59AM", "01:00AM to 01:59AM", "02:00AM to 02:59AM",
+                                             "03:00AM to 03:59AM", "04:00AM to 04:59AM", "05:00AM to 05:59AM",
+                                             "06:00AM to 06:59AM", "07:00AM to 07:59AM", "08:00AM to 08:59AM",
+                                             "09:00AM to 09:59AM", "10:00AM to 10:59AM", "11:00AM to 11:59AM",
+                                             "12:00PM to 12:59PM", "01:00PM to 01:59PM", "02:00PM to 02:59PM",
+                                             "03:00PM to 03:59PM", "04:00PM to 04:59PM", "05:00PM to 05:59PM",
+                                             "06:00PM to 06:59PM", "07:00PM to 07:59PM", "08:00PM to 08:59PM",
+                                             "09:00PM to 09:59PM", "10:00PM to 10:59PM", "11:00PM to 11:59PM"))
+```
+
+
+```{r echo=FALSE}
+ggplot(data = Crash_hourly) +
+  geom_point(mapping = aes(CRASH_HOUR, count), size=5, col='orange') +
+  geom_line(mapping = aes(CRASH_HOUR, count), group=1, size=3) +
+  theme(axis.text.x = element_text(angle = 30))
+```
 
 
